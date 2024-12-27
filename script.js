@@ -138,7 +138,7 @@ function loadScript(url) {
 
 
 function onComplete(transID) {
-listenToTransaction("00S0118E73FCB588AAB69")
+listenToTransaction(transID)
 }
 
 
@@ -166,6 +166,14 @@ console.log("hi2",data)
           transaction_id: transactionId,
         };
 console.log(response)
+
+  const iframeContainer = document.getElementById("iframe-container");
+  if (iframeContainer) {
+    iframeContainer.innerHTML = ""; // Clear the iframe content
+  }
+  
+  // Perform any additional actions after completion
+  alert(`Transaction  completed successfully.`);
 	return response;
               }
     } else {
