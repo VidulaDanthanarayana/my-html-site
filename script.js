@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       customer_last_name: "Dohe",
       customer_phone_number: "+94771234567",
       customer_email: "viduladakshitha@gmail.com",
-      transaction_redirect_url: "https://www.google.com.au",
+      transaction_redirect_url: "https://www.google.com",
       additional_data: "vidula",
     };
 
@@ -102,9 +102,15 @@ function triggerPayAPI(payload) {
         // Create an iframe to open the URL
         const iframe = document.createElement("iframe");
         iframe.src = data.data.gateway.redirect_url;
-        iframe.style.width = "100%";
-        iframe.style.height = "500px"; // Adjust height as needed
-        iframe.style.border = "none";
+      iframe.src = data.data.gateway.redirect_url;
+    iframe.style.width = "100%";
+    iframe.style.height = "100vh"; // Full viewport height
+    iframe.style.border = "none";
+    iframe.style.position = "fixed"; // Fixed position to stay above everything
+    iframe.style.top = "0"; // Align to the top of the viewport
+    iframe.style.left = "0"; // Align to the left of the viewport
+    iframe.style.zIndex = "9999"; // High z-index to appear above all elements
+    iframe.style.backgroundColor = "white"; // Optional, ensures content clarity
         
         // Append iframe to the DOM
         const iframeContainer = document.getElementById("iframe-container");
@@ -142,6 +148,44 @@ listenToTransaction(transID)
 }
 
 
+async function callOnePayGateway(onePayData) {
+  const {
+    appid,
+    hashToken,
+    amount,
+    orderReference,
+    customerFirstName,
+    customerLastName,
+    customerPhoneNumber,
+    customerEmail,
+    transactionRedirectUrl,
+    additionalData,
+  } = onePayData;
+
+  const data = {
+    currency: "LKR",
+    amount,
+    app_id: appid,
+    reference: orderReference,
+    customer_first_name: customerFirstName,
+    customer_last_name: customerLastName,
+    customer_phone_number: customerPhoneNumber,
+    customer_email: customerEmail,
+    transaction_redirect_url: transactionRedirectUrl,
+    additional_data: additionalData,
+  };
+
+  try {
+    const hash = await generateSHA256Hash(data, hashToken);
+    data.hash = hash; // Add the computed hash to the payload
+
+    await triggerPayAPI(data);
+  } catch (error) {
+    console.error("Error during payment process:", error);
+  }
+}
+
+
 function listenToTransaction(transactionId) {
 
 if (!db) {
@@ -157,7 +201,7 @@ console.log("hi1",doc)
     if (doc.exists) {
       const data = doc.data();
       const transactionData = data[transactionId];
-console.log("hi2",data)
+console.log("hi2",transactionData)
       if (transactionData) {
         const response = {
           is_loading: transactionData.is_loading || false,
