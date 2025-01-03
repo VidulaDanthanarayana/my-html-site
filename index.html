@@ -2,43 +2,56 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Pay Button</title>
   <style>
     /* Example CSS for positioning */
-    #onepay-btn {
+    #onepay-btn > button {
       text-align: center; /* Center the button */
       margin-top: 50px;   /* Adjust the vertical position */
+      color: white;
+      background-color:green;
     }
   </style>
 </head>
 <body>
-<div id="onepay-btn"></div>
-<div id="iframe-container"></div>
+<p style="background-color:yellow;font-size:26px">This is a test Website</p>
+  <!-- 1) Create a container for our button -->
+  <div id="onepay-btn"></div>
+
+  <!-- 2) Create a container for the iFrame once the payment link is generated -->
+  <div id="iframe-container"></div>
+
+  <!-- 3) Our global onePayData object -->
+  <script>
+    window.onePayData = {
+      appid: "80NR1189D04CD635D8ACD",
+      hashToken: "GR2P1189D04CD635D8AFD",
+      amount: 100.00,
+      orderReference: "7Q1M1187AE",
+      customerFirstName: "Johe",
+      customerLastName: "Dohe",
+      customerPhoneNumber: "+94771234567",
+      customerEmail: "viduladakshitha@gmail.com",
+      transactionRedirectUrl: "https://www.google.com.au",
+      additionalData: "vidula",
+    };
+
+window.addEventListener("onePaySuccess", function (e) {
+      const successData = e.detail; // The JSON object we dispatched
+      console.log("Payment SUCCESS from index.html:", successData);
+    });
+
+    // Optionally, also listen for the fail event
+    window.addEventListener("onePayFail", function (e) {
+      const failData = e.detail;
+      console.log("Payment FAIL from index.html:", failData);
+    });
+  </script>
 
 
 
-
-  <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-firestore-compat.js"></script>
-
-
+  <!-- Our custom logic -->
   <script src="./script.js"></script>
-<script>
-  const onePayData = {
-    appid: "80NR1189D04CD635D8ACD",
-    hashToken: "GR2P1189D04CD635D8AFD",
-    amount: 100.00,
-    orderReference: "7Q1M1187AE",
-    customerFirstName: "Johe",
-    customerLastName: "Dohe",
-    customerPhoneNumber: "+94771234567",
-    customerEmail: "viduladakshitha@gmail.com",
-    transactionRedirectUrl: "https://www.google.com.au",
-    additionalData: "vidula",
-  };
-
-
-</script>
 </body>
 </html>
