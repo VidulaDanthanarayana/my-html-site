@@ -157,7 +157,7 @@ function triggerPayAPI(payload) {
         // 3) Create the iFrame with width=400px
         const iframe = document.createElement("iframe");
         iframe.src = data.data.gateway.redirect_url;
-        iframe.style.width = (window.innerWidth <= 1300) ? "100%" : "430px";
+        iframe.style.width = (window.innerWidth <= 1300) ? "430px" : "430px";
         iframe.style.height = "600px";   // Adjust height as needed
         iframe.style.border = "none";
 
